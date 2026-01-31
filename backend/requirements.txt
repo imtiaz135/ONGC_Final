@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+python-multipart
+pdfplumber
+sqlalchemy
+pandas
+pydantic
+psycopg2-binary
+reportlab
+gunicorn
+python-dotenv
+Pillow
+pytesseract
+numpy
+scikit-learn
+google-generativeai
