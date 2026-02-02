@@ -1,117 +1,170 @@
-# Well Completion Extractor & Database Validator
+Well Completion Extractor and Database Validator
+Overview
 
-## Overview
-This application is designed to digitize and validate ONGC Well Completion Reports. It allows users to extract structured data from PDF reports or images, compare it against an existing database to identify duplicates or new records, and ensure data quality before saving.
+This application digitizes and validates ONGC Well Completion Reports. It extracts structured data from PDF reports or images, compares the extracted data with an existing database to identify duplicate and new records, and ensures data quality before saving.
 
-## Key Features
+The system uses OCR, rule-based parsing, and LLM-assisted post-processing to handle both structured and unstructured technical documents.
 
-### 1. Data Extraction
-- **Snipping Tool:** Manually select regions on a PDF page to extract tables or key-value pairs.
-- **AI Extraction:** Toggle between robust manual parsing and AI-powered extraction using Google Gemini for complex or unstructured data.
-- **Image Support:** Works with both digital PDFs and scanned image files.
-- **Smart Fallback:** Automatically falls back to OCR or manual parsing if AI extraction fails.
+Key Features
+Data Extraction
 
-### 2. Database Validation
-- **🔍 Check Existence:** Compares extracted data against the database (using Primary Keys like UWI) to identify existing vs. new records.
-- **⚠️ Find Missing Values:** Scans extracted rows for empty or incomplete fields to ensure data quality.
-- **📄 Scan PDF Matches:** Automatically scans an entire PDF file to find all records and checks their status in the database (Matches vs. New).
+Manual region selection on PDF pages to extract tables or key-value data.
 
-### 3. Data Management
-- **Save to Database:** Persist validated data into the system (PostgreSQL in production, SQLite in dev).
-- **Export:** Download extracted data as CSV or generate PDF reports.
-- **Schema Mapping:** Intelligent column mapping using LLM when PDF headers don't match database columns exactly.
+AI-assisted extraction for complex or unstructured layouts.
 
-## User Workflows
+Support for both digital PDFs and scanned images.
 
-### Workflow 1: Check Incoming Report
-1. **Upload:** Upload a PDF Report.
-2. **Extract:** Use the Snipping Tool to select data.
-3. **Check:** Click "🔍 Check Existence".
-4. **Review:** See which records exist and which are new.
-5. **Action:** Save new data or skip duplicates.
+Automatic fallback between rule-based parsing, OCR, and LLM processing to ensure extraction reliability.
 
-### Workflow 2: Quality Assurance
-1. **Extract:** Snip data from the PDF.
-2. **Validate:** Click "⚠️ Find Missing Values".
-3. **Review:** Identify rows with missing fields.
-4. **Fix:** Ensure data is complete before saving.
+Database Validation
 
-### Workflow 3: Bulk Report Validation
-1. **Upload:** Upload a comprehensive PDF report.
-2. **Scan:** Click "📄 Scan PDF Matches" (no manual extraction needed).
-3. **Analyze:** View a summary of all records in the PDF vs. the Database.
-4. **Identify:** See which pages contain new data vs. existing data.
+Comparison of extracted records with the database using primary keys such as UWI.
 
-## Tech Stack
+Detection of missing or incomplete values in extracted data.
 
-### Frontend
-- **Framework:** React with TypeScript
-- **Styling:** Tailwind CSS
-- **PDF Handling:** react-pdf
-- **State Management:** React Hooks
+Full PDF scanning to identify all records and classify them as existing or new based on database comparison.
 
-### Backend
-- **Framework:** FastAPI (Python)
-- **Database:** PostgreSQL (Production), SQLite (Development)
-- **ORM:** SQLAlchemy
-- **AI/OCR:** Google Gemini API, Tesseract OCR, pdfplumber, Pillow
+Data Management
 
-## Setup Instructions
+Saving validated data to the database.
 
-### Prerequisites
-- Python 3.8+
-- Node.js 16+
-- Tesseract OCR (optional, for local OCR fallback)
+Exporting extracted data as CSV or PDF.
 
-### Backend Setup
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Run the server:
-   ```bash
-   python main.py
-   ```
-   The server runs on `http://127.0.0.1:9000`.
+Intelligent column-to-schema mapping when PDF headers differ from database column names.
 
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+Use of LLM (Ollama)
 
-## API Endpoints
+This application uses a local Large Language Model through Ollama, specifically the model llama3.2-vision:latest.
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/extract` | Extract data from a selected region (Manual/AI). |
-| `POST` | `/check-existence` | Check if extracted rows exist in the DB. |
-| `POST` | `/save` | Save validated data to the database. |
-| `POST` | `/upload` | Upload a PDF file for processing. |
-| `POST` | `/export` | Export valid rows to CSV. |
+The LLM is not used for raw OCR. OCR is performed first, and the LLM is used as a post-processing layer.
 
-## Database Schema
-The application supports the following ONGC tables:
-- `WCR_WELLHEAD`
-- `WCR_CASING`
-- `WCR_LOGSRECORD`
-- `WCR_DIRSRVY`
-- `WCR_SWC`
-- `WCR_HCSHOWS`
+The LLM is used for:
+
+Cleaning noisy OCR output
+
+Correcting common OCR errors
+
+Converting unstructured text into structured data
+
+Extracting tables and key-value pairs
+
+Mapping extracted fields to database schema
+
+Enforcing strict output formats to avoid hallucination
+
+An optional cloud-based LLM (Google Gemini) can be used as a fallback for highly complex layouts.
+
+Processing Pipeline
+
+PDF or Image
+OCR (Tesseract, pdfplumber)
+Text normalization
+LLM post-processing using Ollama
+Structured JSON output
+Database validation and storage
+
+User Workflows
+Workflow 1: Incoming Report Validation
+
+Upload a PDF report.
+
+Select data regions manually.
+
+Extract data.
+
+Check extracted records against the database.
+
+Save new records or skip duplicates.
+
+Workflow 2: Data Quality Check
+
+Extract data from a PDF.
+
+Validate extracted fields for missing values.
+
+Correct issues before saving.
+
+Workflow 3: Bulk PDF Validation
+
+Upload a complete PDF report.
+
+Scan the entire PDF without manual selection.
+
+View summary of existing and new records.
+
+Technology Stack
+Frontend
+
+React with TypeScript
+
+Tailwind CSS
+
+react-pdf
+
+Backend
+
+FastAPI (Python)
+
+SQLAlchemy ORM
+
+PostgreSQL for production
+
+SQLite for development
+
+Tesseract OCR
+
+pdfplumber
+
+Pillow
+
+Ollama LLM (llama3.2-vision:latest)
+
+Google Gemini API (optional)
+
+Setup Instructions
+Prerequisites
+
+Python 3.8 or higher
+
+Node.js 16 or higher
+
+Tesseract OCR
+
+Ollama installed locally
+
+Install Ollama Model
+ollama pull llama3.2-vision:latest
+
+Backend Setup
+cd backend
+pip install -r requirements.txt
+python main.py
 
 
+Backend runs on http://127.0.0.1:9000
 
----
-*Built for ONGC Well Completion Report digitization.*
+Frontend Setup
+cd frontend
+npm install
+npm run dev
+
+API Endpoints
+Method	Endpoint	Description
+POST	/extract	Extract data from selected region
+POST	/check-existence	Compare extracted data with database
+POST	/save	Save validated data
+POST	/upload	Upload PDF
+POST	/export	Export extracted data
+Supported Database Tables
+
+WCR_WELLHEAD
+
+WCR_CASING
+
+WCR_LOGSRECORD
+
+WCR_DIRSRVY
+
+WCR_SWC
+
+WCR_HCSHOWS
