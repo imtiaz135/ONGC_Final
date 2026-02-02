@@ -1,12 +1,12 @@
-Well Completion Extractor and Database Validator
-Overview
+#Well Completion Extractor and Database Validator
+##Overview
 
-This application digitizes and validates ONGC Well Completion Reports. It extracts structured data from PDF reports or images, compares extracted data with an existing database to identify duplicate and new records, and ensures data quality before saving.
+This application digitizes and validates ONGC Well Completion Reports. It extracts unstructured data from PDF reports or images and conver it to structured table , compares extracted data with an existing database to identify duplicate and new records, and ensures data quality before saving.
 
 The system combines OCR, rule-based parsing, and LLM-assisted post-processing to handle both structured and unstructured technical documents.
 
-Key Features
-1. Data Extraction
+##Key Features
+###1. Data Extraction
 
 Manual region selection on PDF pages to extract tables or key-value data.
 
@@ -16,7 +16,7 @@ Support for both digital PDFs and scanned images.
 
 Automatic fallback between rule-based parsing, OCR, and LLM processing.
 
-2. Database Validation
+###2. Database Validation
 
 Comparison of extracted records with the database using primary keys such as UWI.
 
@@ -24,7 +24,7 @@ Detection of missing or incomplete values in extracted data.
 
 Full PDF scanning to identify all records and classify them as existing or new.
 
-3. Data Management
+###3. Data Management
 
 Save validated data to the database.
 
@@ -32,13 +32,13 @@ Export extracted data as CSV or PDF.
 
 Intelligent column-to-schema mapping when PDF headers differ from database column names.
 
-Use of LLM (Ollama)
+##Use of LLM (Ollama)
 
 This application uses a local Large Language Model through Ollama, specifically llama3.2-vision:latest.
 
 The LLM is not used for raw OCR. OCR is performed first, and the LLM acts as a post-processing and validation layer.
 
-LLM Responsibilities
+##LLM Responsibilities
 
 Cleaning noisy OCR output
 
@@ -54,7 +54,7 @@ Enforcing strict output formats to prevent hallucination
 
 An optional cloud-based LLM (Google Gemini) can be used as a fallback for highly complex document layouts.
 
-Processing Pipeline
+##Processing Pipeline
 
 PDF or Image
 OCR using Tesseract and pdfplumber
@@ -63,9 +63,9 @@ LLM post-processing using Ollama
 Structured JSON output
 Database validation and storage
 
-User Workflows
-Workflow 1: Incoming Report Validation
-
+##User Workflows
+###Workflow 1: Incoming Report Validation
+             
 Upload a PDF report
 
 Select data regions manually
@@ -76,7 +76,7 @@ Check extracted records against the database
 
 Save new records or skip duplicates
 
-Workflow 2: Data Quality Check
+###Workflow 2: Data Quality Check
 
 Extract data from a PDF
 
@@ -84,7 +84,7 @@ Validate extracted fields for missing values
 
 Correct issues before saving
 
-Workflow 3: Bulk PDF Validation
+###Workflow 3: Bulk PDF Validation
 
 Upload a complete PDF report
 
@@ -92,37 +92,28 @@ Scan the entire PDF without manual extraction
 
 View a summary of existing and new records
 
-Technology Stack
-Frontend
+##Technology Stack
+###Frontend
 
-React with TypeScript
+- **Framework:**React with TypeScript
 
-Tailwind CSS
+- **Styling:**Tailwind CSS
 
-react-pdf
+- **PDF Handling:**react-pdf
 
-Backend
+##Backend
 
-FastAPI (Python)
+- **Framework:**FastAPI (Python)
 
-SQLAlchemy ORM
+- **Database:**PostgreSQL (Production), SQLite (Development)
 
-PostgreSQL (production)
+- **ORM:** SQLAlchemy
 
-SQLite (development)
+- **AI/OCR:** Google Gemini API, Tesseract OCR, pdfplumber, Pillow,Ollama LLM (llama3.2-vision:latest)
 
-Tesseract OCR
 
-pdfplumber
-
-Pillow
-
-Ollama LLM (llama3.2-vision:latest)
-
-Google Gemini API (optional)
-
-Setup Instructions
-Prerequisites
+##Setup Instructions
+###Prerequisites
 
 Python 3.8 or higher
 
@@ -130,32 +121,44 @@ Node.js 16 or higher
 
 Tesseract OCR
 
-Ollama installed locally
+##Ollama installed locally
 
 Install Ollama Model
 ollama pull llama3.2-vision:latest
 
-Backend Setup
+###Backend Setup
+1. Navigate to the backend directory:
+bash
 cd backend
-pip install -r requirements.txt
-python main.py
+2. Install dependencies:
+bash
+   pip install -r requirements.txt
+3. Run the server:
+bash
+   python main.py
 
 
 The backend runs on http://127.0.0.1:9000.
 
-Frontend Setup
+##Frontend Setup
+1. Navigate to the frontend directory:
+bash
 cd frontend
+2. Install dependencies:
+bash
 npm install
-npm run dev
+3. Start the development server:
+bash
+   npm run dev
 
-API Endpoints
+A##PI Endpoints
 Method	Endpoint	Description
 POST	/extract	Extract data from selected region
 POST	/check-existence	Compare extracted data with database
 POST	/save	Save validated data
 POST	/upload	Upload PDF
 POST	/export	Export extracted data
-Supported Database Tables
+##Supported Database Tables
 
 WCR_WELLHEAD
 
