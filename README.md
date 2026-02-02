@@ -1,12 +1,12 @@
 Well Completion Extractor and Database Validator
 Overview
 
-This application digitizes and validates ONGC Well Completion Reports. It extracts structured data from PDF reports or images, compares the extracted data with an existing database to identify duplicate and new records, and ensures data quality before saving.
+This application digitizes and validates ONGC Well Completion Reports. It extracts structured data from PDF reports or images, compares extracted data with an existing database to identify duplicate and new records, and ensures data quality before saving.
 
-The system uses OCR, rule-based parsing, and LLM-assisted post-processing to handle both structured and unstructured technical documents.
+The system combines OCR, rule-based parsing, and LLM-assisted post-processing to handle both structured and unstructured technical documents.
 
 Key Features
-Data Extraction
+1. Data Extraction
 
 Manual region selection on PDF pages to extract tables or key-value data.
 
@@ -14,31 +14,31 @@ AI-assisted extraction for complex or unstructured layouts.
 
 Support for both digital PDFs and scanned images.
 
-Automatic fallback between rule-based parsing, OCR, and LLM processing to ensure extraction reliability.
+Automatic fallback between rule-based parsing, OCR, and LLM processing.
 
-Database Validation
+2. Database Validation
 
 Comparison of extracted records with the database using primary keys such as UWI.
 
 Detection of missing or incomplete values in extracted data.
 
-Full PDF scanning to identify all records and classify them as existing or new based on database comparison.
+Full PDF scanning to identify all records and classify them as existing or new.
 
-Data Management
+3. Data Management
 
-Saving validated data to the database.
+Save validated data to the database.
 
-Exporting extracted data as CSV or PDF.
+Export extracted data as CSV or PDF.
 
 Intelligent column-to-schema mapping when PDF headers differ from database column names.
 
 Use of LLM (Ollama)
 
-This application uses a local Large Language Model through Ollama, specifically the model llama3.2-vision:latest.
+This application uses a local Large Language Model through Ollama, specifically llama3.2-vision:latest.
 
-The LLM is not used for raw OCR. OCR is performed first, and the LLM is used as a post-processing layer.
+The LLM is not used for raw OCR. OCR is performed first, and the LLM acts as a post-processing and validation layer.
 
-The LLM is used for:
+LLM Responsibilities
 
 Cleaning noisy OCR output
 
@@ -48,16 +48,16 @@ Converting unstructured text into structured data
 
 Extracting tables and key-value pairs
 
-Mapping extracted fields to database schema
+Mapping extracted fields to the database schema
 
-Enforcing strict output formats to avoid hallucination
+Enforcing strict output formats to prevent hallucination
 
-An optional cloud-based LLM (Google Gemini) can be used as a fallback for highly complex layouts.
+An optional cloud-based LLM (Google Gemini) can be used as a fallback for highly complex document layouts.
 
 Processing Pipeline
 
 PDF or Image
-OCR (Tesseract, pdfplumber)
+OCR using Tesseract and pdfplumber
 Text normalization
 LLM post-processing using Ollama
 Structured JSON output
@@ -66,31 +66,31 @@ Database validation and storage
 User Workflows
 Workflow 1: Incoming Report Validation
 
-Upload a PDF report.
+Upload a PDF report
 
-Select data regions manually.
+Select data regions manually
 
-Extract data.
+Extract data
 
-Check extracted records against the database.
+Check extracted records against the database
 
-Save new records or skip duplicates.
+Save new records or skip duplicates
 
 Workflow 2: Data Quality Check
 
-Extract data from a PDF.
+Extract data from a PDF
 
-Validate extracted fields for missing values.
+Validate extracted fields for missing values
 
-Correct issues before saving.
+Correct issues before saving
 
 Workflow 3: Bulk PDF Validation
 
-Upload a complete PDF report.
+Upload a complete PDF report
 
-Scan the entire PDF without manual selection.
+Scan the entire PDF without manual extraction
 
-View summary of existing and new records.
+View a summary of existing and new records
 
 Technology Stack
 Frontend
@@ -107,9 +107,9 @@ FastAPI (Python)
 
 SQLAlchemy ORM
 
-PostgreSQL for production
+PostgreSQL (production)
 
-SQLite for development
+SQLite (development)
 
 Tesseract OCR
 
@@ -141,7 +141,7 @@ pip install -r requirements.txt
 python main.py
 
 
-Backend runs on http://127.0.0.1:9000
+The backend runs on http://127.0.0.1:9000.
 
 Frontend Setup
 cd frontend
