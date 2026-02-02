@@ -1,4 +1,4 @@
-#Well Completion Extractor and Database Validator
+#Well Completion Extractor 
 
 ##Overview
 
