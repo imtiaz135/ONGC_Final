@@ -111,16 +111,7 @@ The application supports the following ONGC tables:
 - `WCR_SWC`
 - `WCR_HCSHOWS`
 
-## Deployment
 
-### Backend (Render)
-- Push changes to GitHub.
-- Render automatically deploys the `backend` directory.
-- Environment Variables: `DATABASE_URL`, `GEMINI_API_KEY`.
-
-### Frontend (Vercel)
-- Push changes to GitHub.
-- Vercel automatically builds and deploys the `frontend` directory.
 
 ---
 *Built for ONGC Well Completion Report digitization.*
